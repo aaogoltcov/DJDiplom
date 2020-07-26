@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}<link rel="stylesheet" href="{% static 'login.css' %}">{% endblock %}
+
+{% block content %}
+    <p>Вы не авторизованы! <a href="{% url 'login'%}">Нажмите, чтобы авторизоваться.</a></p>
+{% endblock %}

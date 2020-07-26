@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}<link rel="stylesheet" href="{% static 'login.css' %}">{% endblock %}
+
+{% block content %}
+  {% if user.is_authenticated %}
+    <p>Вы уже авторизованы. <a href="{% url 'logged_out'%}">Нажмите, чтобы выйти.</a></p>
+  {% else %}
+    <form class="form-signin" method="post" action='{% url "login" %}'>
+      {% csrf_token %}
+      {% if form.errors %}
+        <p>Не верный логин или пароль. Попробуйте снова.</p>
+      {% elif not user.is_authenticated %}
+        <p>Введите логин и пароль для авторизации.</p>
+      {% endif %}
+      <input type="hidden" name="next" value="">
+      <img class="mb-4" src="{% static 'logo.svg' %}" alt="" width="72" height="72">
+      <h1 class="h3 mb-3 font-weight-normal">Вход</h1>
+
+      <label for="id_username" class="sr-only">Email</label>
+      <input type="text" id="id_username" class="form-control" placeholder="Email" name="username"
+             autocapitalize="none" autocomplete="username" value="" required="" autofocus="" data-cip-id="id_username">
+
+      <label for="inputPassword" class="sr-only">Password</label>
+      <input type="password" id="inputPassword" class="form-control" placeholder="Пароль" name="password"
+             required="" data-cip-id="inputPassword">
+
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>
+      <br>
+      {% if form.errors %}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+      <p class="mt-5 mb-3 text-muted">© Просто магазин 2018</p>
+    </form>
+  {% endif %}
+{% endblock %}
+

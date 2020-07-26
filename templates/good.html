@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load static %}
+{% load shop_tags %}
+{% block content %}
+<main role="main">
+  <div class="container mt-3">
+    <!-- Example row of columns -->
+    <div class="row">
+      <div class="col-md-12">
+        <h2>{{ good.good_name }}</h2>
+        <img src="{% static good.good_image|name_of_file %}" width="120">
+        <p>{{ good.good_desctiption }}</p>
+        <form method="post" action="./cart/">
+          <input type="hidden" name="csrfmiddlewaretoken"
+                 value="N4vcBqzjoYkU7OTDuAT8hq8srpvYX44nJsswuP7e3EYg0Hq8DgxuR0eiXWbSr5RZ">
+          <input type="hidden" name="merchandise_id" value="1">
+          <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
+        </form>
+      </div>
+    </div>
+    {% for feedback in good.feedbacks %}
+    <hr>
+      <span>{{ feedback.feedback_score }}</span>
+      {% if feedback.feedback_person_name %}
+        <span>{{ feedback.feedback_person_name }}</span>
+      {% elif feedback.user_username %}
+        <span>{{ feedback.user_username }}</span>
+      {% else %}
+        <span>Анонимный пользователь</span>
+      {% endif %}
+      <p>{{ feedback.feedback_description }}</p>
+    {% endfor %}
+    <hr>
+    <div class="row">
+      <div class="col-lg-6 col-md-8 col-sm-12">
+        {% if is_feedback == False %}
+          <h4>Вы не можете оставить более одного отзыва!</h4>
+        {% else %}
+          <h4>Оставте отзыв:</h4>
+        {% endif %}
+        <form action="{% url 'good' good.good_id %}" method="POST">
+          {% csrf_token %}
+          {% for field in form %}
+            {% if field.name == 'person_name' %}
+              <div class="form-group">
+                <label for="{{ field.id }}">{{ field.label_tag }}</label>
+                <input type="text" class="form-control" id="{{ field.id }}"
+                       placeholder="Представтесь" name="{{ field.name }}" required>
+              </div>
+            {% elif field.name == 'description' %}
+              <div class="form-group">
+                <label for="{{ field.id }}">{{ field.label_tag }}</label>
+                <textarea class="form-control" id="{{ field.id }}" placeholder="Содержание"
+                      name="{{ field.name }}" required></textarea>
+              </div>
+            {% else %}
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="{{ field.name }}" id="{{ field.id }}" value="★★★★★">
+                <label for="{{ field.id }}">★★★★★</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="{{ field.name }}" id="{{ field.id }}" value="★★★★">
+                <label for="{{ field.id }}">★★★★</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="{{ field.name }}" id="{{ field.id }}" value="★★★">
+                <label for="{{ field.id }}">★★★</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="{{ field.name }}" id="{{ field.id }}" value="★★">
+                <label for="{{ field.id }}">★★</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="{{ field.name }}" id="{{ field.id }}" value="★" required>
+                <label for="{{ field.id }}">★</label>
+              </div>
+            {% endif %}
+          <div class="errors"><strong class="errors">{{ field.errors }}</strong></div>
+          {% endfor%}
+          <button type="submit" class="btn btn-primary">Оставить</button>
+        </form>
+      </div>
+    </div>
+  </div> <!-- /container -->
+</main>
+{% include 'footer.html' %}
+{% endblock %}

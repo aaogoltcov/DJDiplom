@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}<link rel="stylesheet" href="{% static 'login.css' %}">{% endblock %}
+
+{% block content %}
+    <form class="form-signin" method="post" action='{% url "signup" %}'>
+      {% csrf_token %}
+      <input type="hidden" name="next" value="">
+      <img class="mb-4" src="{% static 'logo.svg' %}" alt="" width="72" height="72">
+      <h1 class="h3 mb-3 font-weight-normal">Регистрация</h1>
+
+      <label for="email" class="sr-only">Email</label>
+      <input type="email" id="email" class="form-control" placeholder="Email" name="email"
+             value="" required="" autofocus="" data-cip-id="email">
+
+      <label for="password1" class="sr-only">Пароль</label>
+      <input type="password" id="password1" class="form-control" placeholder="Придумайте пароль" name="password1"
+             required="" data-cip-id="password1">
+
+      <label for="password2" class="sr-only">Пароль</label>
+      <input type="password" id="password2" class="form-control" placeholder="Повторите пароль" name="password2"
+             required="" data-cip-id="password2">
+
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Зарегистрироваться</button>
+        <br>
+        {% if is_user %}
+            <div class="alert alert-danger">
+                <strong>Такой пользователь уже существует!</strong>
+            </div>
+        {% endif %}
+        {% if form.errors %}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+      <p class="mt-5 mb-3 text-muted">© Просто магазин 2018</p>
+    </form>
+{% endblock %}
+

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <main role="main">
+        {% for paper in papers %}
+            <div class="jumbotron">
+                <div class="container">
+                  <h1 class="display-4">{{ paper.paper_title }}</h1>
+                  <p>{{ paper.paper_text }}</p>
+                </div>
+            </div>
+            <div class="container mb-5">
+            <!-- Example row of columns -->
+                <div class="row">
+                    {% for good in paper.goods %}
+                        <div class="col-md-4">
+                            <h2>{{ phone.name }}</h2>
+                            <a href="{% url 'good' good.good_id %}">
+                                <img src="{{ good.good_image }}" width="180">
+                            </a>
+                            {% if user.is_authenticated %}
+                                <form action="{% url 'home' %}" method="POST">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-secondary" name="cart" value="{{ good.good_id }}">Добавить в корзину »</button>
+                                </form>
+                            {% else %}
+                                <form action="{% url 'login' %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-secondary"">Авторизируйтесь »</button>
+                                </form>
+                            {% endif %}
+                        </div>
+
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </main>
+{% include 'footer.html' %}
+{% endblock %}
