@@ -8,13 +8,12 @@
     <div class="row">
       <div class="col-md-12">
         <h2>{{ good.good_name }}</h2>
+        <h3>{{ good.good_price }} руб.</h3>
         <img src="{% static good.good_image|name_of_file %}" width="120">
         <p>{{ good.good_desctiption }}</p>
-        <form method="post" action="./cart/">
-          <input type="hidden" name="csrfmiddlewaretoken"
-                 value="N4vcBqzjoYkU7OTDuAT8hq8srpvYX44nJsswuP7e3EYg0Hq8DgxuR0eiXWbSr5RZ">
-          <input type="hidden" name="merchandise_id" value="1">
-          <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
+        <form action="{% url 'good' good.good_id %}" method="POST">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-secondary" name="cart" value="{{ good.good_id }}">Добавить в корзину »</button>
         </form>
       </div>
     </div>

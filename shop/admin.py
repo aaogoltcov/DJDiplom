@@ -1,6 +1,8 @@
 from django.contrib import admin
 
-from shop.models import Good, Feedback, Paper, Catalog, SubCatalog, Cart, Order
+from cart.models import Cart
+from orders.models import Order
+from shop.models import Good, Feedback, Paper, Catalog, SubCatalog
 
 
 @admin.register(Paper)
